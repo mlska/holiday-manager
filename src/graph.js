@@ -1,4 +1,4 @@
-export async function callMsGraphGet(endPoint, accessToken) {
+export function callMsGraphGet(endPoint, accessToken) {
   const headers = new Headers();
   const bearer = `Bearer ${accessToken}`;
 
@@ -9,12 +9,14 @@ export async function callMsGraphGet(endPoint, accessToken) {
     headers: headers,
   };
 
-  return fetch(endPoint, options)
+  const response = fetch(endPoint, options)
     .then((response) => response.json())
     .catch((error) => console.log(error));
+
+  return response;
 }
 
-export async function callMsGraphPatch(endPoint, accessToken) {
+export function callMsGraphPatch(endPoint, accessToken) {
   const headers = new Headers();
   const bearer = `Bearer ${accessToken}`;
 
@@ -35,9 +37,9 @@ export async function callMsGraphPatch(endPoint, accessToken) {
     }),
   };
 
-  console.log(options);
-
-  return fetch(endPoint, options)
+  const response = fetch(endPoint, options)
     .then((response) => response.json())
     .catch((error) => console.log(error));
+
+  return response;
 }
