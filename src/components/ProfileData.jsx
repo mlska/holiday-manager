@@ -13,9 +13,7 @@ export const ProfileData = (props) => {
   const events = props.events.value;
 
   events.sort(function (a, b) {
-    let c = new Date(a.start.dateTime);
-    let d = new Date(b.start.dateTime);
-    return d - c;
+    return new Date(b.start.dateTime) - new Date(a.start.dateTime);
   });
 
   const [stats, setStats] = useState({
@@ -123,21 +121,20 @@ export const ProfileData = (props) => {
   });
 
   const calculateStats = () => {
-    let daysTaken = 0;
-    let notPrintedApps = 0;
-    holidays.forEach((holiday) => {
-      daysTaken = daysTaken + holiday.props.days;
-      if (!holiday.props.isprinted) {
-        notPrintedApps = notPrintedApps + 1;
-      }
-    });
     setStats({
-      daysTaken: daysTaken,
-      notPrintedApps: notPrintedApps,
+      daysTaken: 0,
+      notPrintedApps: 0,
+    });
+
+    holidays.forEach((holiday) => {
+      setStats((prevState) => ({
+        daysTaken: prevState.daysTaken + holiday.props.days,
+        notPrintedApps: !holiday.props.isprinted
+          ? prevState.notPrintedApps + 1
+          : prevState.notPrintedApps,
+      }));
     });
   };
-
-  console.log(events);
 
   useEffect(() => {
     calculateStats();
