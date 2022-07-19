@@ -73,14 +73,14 @@ function ProfileContent() {
     requestEvents();
   }, []);
 
-  return events ? (
-    <ProfileData
-      profile={profile}
-      events={events}
-      requestEvents={requestEvents}
-    />
-  ) : (
-    ""
+  return (
+    events && (
+      <ProfileData
+        profile={profile}
+        events={events}
+        requestEvents={requestEvents}
+      />
+    )
   );
 }
 
