@@ -1,0 +1,24 @@
+#root {
+  width: 1200px;
+  margin: 0 auto;
+  font-family: "Roboto", sans-serif;
+}
+
+#profile {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.navbar {
+  position: relative;
+}
+
+.navbar a {
+  position: relative;
+  left: 2rem;
+}
+
+.navbar button {
+  position: relative;
+  left: 880px;
+}
