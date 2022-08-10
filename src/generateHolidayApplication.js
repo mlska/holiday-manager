@@ -4,7 +4,7 @@ import PizZipUtils from "pizzip/utils/index.js";
 import { saveAs } from "file-saver";
 
 const generateHolidayApplication = (data) => {
-  const templatePath = "http://127.0.0.1:8080//application_template.docx";
+  const templatePath = "http://127.0.0.1:3000//application_template.docx";
 
   PizZipUtils.getBinaryContent(templatePath, function (error, content) {
     if (error) {
