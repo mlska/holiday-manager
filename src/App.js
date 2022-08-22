@@ -7,6 +7,7 @@ import {
 } from "@azure/msal-react";
 import { loginRequest, graphConfig } from "./authConfig";
 import { ProfileData } from "./components/ProfileData";
+import WelcomeContent from "./components/WelcomeContent";
 import { callMsGraphGet } from "./graph";
 import "./App.css";
 
@@ -90,7 +91,9 @@ function App() {
       <AuthenticatedTemplate>
         <ProfileContent />
       </AuthenticatedTemplate>
-      <UnauthenticatedTemplate></UnauthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <WelcomeContent />
+      </UnauthenticatedTemplate>
     </PageLayout>
   );
 }
