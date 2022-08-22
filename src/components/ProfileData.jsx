@@ -5,6 +5,7 @@ import generateHolidayApplication from "../generateHolidayApplication";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest, graphConfig } from "../authConfig";
 import { callMsGraphPatch } from "../graph";
+import HolidayForm from "./HolidayForm";
 
 export const ProfileData = (props) => {
   const { instance, accounts } = useMsal();
@@ -20,6 +21,12 @@ export const ProfileData = (props) => {
     daysTaken: 0,
     notPrintedApps: 0,
   });
+
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const handleSetIsFormVisible = () => {
+    setIsFormVisible((prevState) => !prevState);
+  };
 
   function patchEvent(eventID) {
     const request = {
@@ -99,17 +106,12 @@ export const ProfileData = (props) => {
             Zatwierdzony przez: <strong>{confirmedBy}</strong>
           </div>
           {isPrinted ? (
-            <Button
-              style={{ marginTop: "1rem" }}
-              className="btn-secondary"
-              disabled
-            >
+            <Button className="btn btn-secondary btn-lg px-4 my-3" disabled>
               Wniosek wydrukowany
             </Button>
           ) : (
             <Button
-              style={{ marginTop: "1rem" }}
-              className="btn-primary"
+              className="btn btn-primary btn-lg px-4 my-3"
               onClick={handleHolidayApplication}
             >
               Drukuj wniosek
@@ -143,25 +145,41 @@ export const ProfileData = (props) => {
   return (
     <>
       <div id="profile">
-        {props.profile ? (
+        {props?.profile && (
           <>
-            <h3>Witaj {profile.displayName} !</h3>
-            <div>
-              Masz zaległych <strong>{stats.notPrintedApps}</strong> wniosków do
-              wydrukowania
-            </div>
-            <div>
-              Byłeś w tym roku: <strong>{stats.daysTaken}</strong> dni na
-              urlopie.
-            </div>
-            <div>
-              Pozostało do wykorzystania <strong>{26 - stats.daysTaken}</strong>{" "}
-              dni.{" "}
+            <div className="px-4 py-2 my-2 text-center">
+              <h1 className="display-5 fw-bold">
+                Witaj {profile.displayName} !
+              </h1>
+              <div className="col-lg-6 mx-auto">
+                <p className="lead mb-2">
+                  Masz zaległych <strong>{stats.notPrintedApps}</strong>{" "}
+                  wniosków do wydrukowania
+                </p>
+                <p className="lead mb-2">
+                  Byłeś w tym roku: <strong>{stats.daysTaken}</strong> dni na
+                  urlopie.
+                </p>
+                <p className="lead mb-2">
+                  Pozostało do wykorzystania{" "}
+                  <strong>{26 - stats.daysTaken}</strong> dni.
+                </p>
+                <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                  {!isFormVisible && (
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-lg px-4 my-4 gap-3"
+                      onClick={handleSetIsFormVisible}
+                    >
+                      Nowy urlop
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </>
-        ) : (
-          ""
         )}
+        {isFormVisible && <HolidayForm />}
       </div>
       {holidays}
     </>

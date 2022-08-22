@@ -13,7 +13,7 @@ export const SignOutButton = () => {
 
   return (
     <Button
-      variant="btn btn-warning"
+      variant="btn btn-warning btn-md px-4"
       className="ml-auto"
       onClick={() => handleLogout(instance)}
     >
