@@ -14,7 +14,7 @@ export const SignInButton = () => {
 
   return (
     <Button
-      variant="btn btn-success btn-md px-4"
+      variant="btn btn-success btn-md px-4 me-4"
       className="ml-auto"
       onClick={() => handleLogin(instance)}
     >

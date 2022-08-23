@@ -9,8 +9,12 @@ export const PageLayout = (props) => {
 
   return (
     <>
-      <Navbar bg="primary" variant="dark">
-        <a className="navbar-brand" href="/">
+      <Navbar
+        bg="primary"
+        variant="dark"
+        className="d-flex justify-content-between"
+      >
+        <a className="navbar-brand ms-4" href="/">
           Manager urlopów
         </a>
         {isAuthenticated ? <SignOutButton /> : <SignInButton />}
