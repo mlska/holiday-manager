@@ -22,12 +22,6 @@ export const ProfileData = (props) => {
     notPrintedApps: 0,
   });
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
-
-  const handleSetIsFormVisible = () => {
-    setIsFormVisible((prevState) => !prevState);
-  };
-
   function patchEvent(eventID) {
     const request = {
       ...loginRequest,
@@ -164,23 +158,12 @@ export const ProfileData = (props) => {
                   Pozostało do wykorzystania{" "}
                   <strong>{26 - stats.daysTaken}</strong> dni.
                 </p>
-                <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                  {!isFormVisible && (
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-lg px-4 my-4 gap-3"
-                      onClick={handleSetIsFormVisible}
-                    >
-                      Nowy urlop
-                    </button>
-                  )}
-                </div>
               </div>
             </div>
           </>
         )}
-        {isFormVisible && <HolidayForm />}
       </div>
+      <HolidayForm />
       {holidays}
     </>
   );
