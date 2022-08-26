@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
 import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.css";
 
@@ -12,6 +13,49 @@ const HolidayForm = () => {
   const [localization, setLocalization] = useState("");
 
   const [show, setShow] = useState(false);
+
+  const types = [
+    "Wypoczynkowy",
+    "Okolicznościowy",
+    "Rehabilitacyjny",
+    "Opiekuńczy",
+    "Szkoleniowy",
+  ];
+
+  const [radioValue, setRadioValue] = useState(types[0]);
+
+  const handleOnChange = (event) => {
+    setRadioValue(event.target.value);
+  };
+
+  const TypesComponent = types.map((type) => (
+    <Form.Check
+      key={`radio-${type}`}
+      type="radio"
+      name="types"
+      label={type}
+      value={type}
+      onChange={handleOnChange}
+      checked={radioValue === type}
+    />
+  ));
+
+  const attendees = [
+    {
+      name: "Jakub Kamiński",
+      mail: "jakub.kaminski@blue-robotics.pl",
+    },
+    {
+      name: "Piotr Bieda",
+      mail: "piotr.bieda@blue-robotics.pl",
+    },
+    {
+      name: "Katarzyna Trzcińska",
+      mail: "katarzyna.trzcinska@blue-robotics.pl",
+    },
+  ];
+
+  const [checkBoxValue, setCheckBoxValue] = useState();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -38,7 +82,6 @@ const HolidayForm = () => {
               Data
               <DateRangePicker
                 className="d-block"
-                style={{ zIndex: 1100 }}
                 value={date}
                 onChange={setDate}
                 format={"dd-MM-yyyy"}
@@ -55,44 +98,9 @@ const HolidayForm = () => {
                 className="d-block"
               />
             </label>
-            <div
-              class="btn-group"
-              role="group"
-              aria-label="Basic radio toggle button group"
-            >
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio1"
-                autocomplete="off"
-                checked
-              />
-              <label class="btn btn-outline-primary" for="btnradio1">
-                Radio 1
-              </label>
-
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio2"
-                autocomplete="off"
-              />
-              <label class="btn btn-outline-primary" for="btnradio2">
-                Radio 2
-              </label>
-
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio3"
-                autocomplete="off"
-              />
-              <label class="btn btn-outline-primary" for="btnradio3">
-                Radio 3
-              </label>
+            <div>
+              <div className="mb-1">Rodzaj</div>
+              {TypesComponent}
             </div>
           </div>
         </Modal.Body>

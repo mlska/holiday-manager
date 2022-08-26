@@ -8,7 +8,6 @@ import {
 import { loginRequest, graphConfig } from "./authConfig";
 import { ProfileData } from "./components/ProfileData";
 import WelcomeContent from "./components/WelcomeContent";
-import HolidayForm from "../src/components/HolidayForm";
 import { callMsGraphGet } from "./graph";
 import "./App.css";
 
