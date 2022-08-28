@@ -163,7 +163,11 @@ export const ProfileData = (props) => {
           </>
         )}
       </div>
-      <HolidayForm profile={profile} requestEvents={props.requestEvents} />
+      <HolidayForm
+        profile={profile}
+        requestEvents={props.requestEvents}
+        events={events}
+      />
       {holidays}
     </>
   );

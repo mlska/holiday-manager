@@ -10,7 +10,7 @@ import { callMsGraphPost } from "../graph";
 
 import { useMsal } from "@azure/msal-react";
 
-const HolidayForm = ({ profile, requestEvents }) => {
+const HolidayForm = ({ profile, requestEvents, events }) => {
   const { instance, accounts } = useMsal();
 
   const [show, setShow] = useState(false);
@@ -158,31 +158,47 @@ const HolidayForm = ({ profile, requestEvents }) => {
       ],
     };
 
-    const request = {
-      ...loginRequest,
-      account: accounts[0],
-    };
+    let isOverlapping = false;
 
-    instance
-      .acquireTokenSilent(request)
-      .then((response) =>
-        callMsGraphPost(
-          graphConfig.graphEventEndPoint,
-          response.accessToken,
-          data
-        ).then((response) => {
-          setValidateMessage(messages.success);
-          handleResetInputs();
-          setTimeout(() => {
-            setShow(false);
-            requestEvents();
-          }, 3000);
-        })
-      )
-      .catch((e) => {
-        setValidateMessage(messages.error);
-        console.log(e);
-      });
+    events.forEach((event) => {
+      const start = event.start.dateTime.slice(0, 10);
+      const end = event.end.dateTime.slice(0, 10);
+      if (end >= data.start && start <= data.end) {
+        console.log("konflikt urlopu");
+        isOverlapping = true;
+        return;
+      }
+    });
+
+    if (isOverlapping) {
+      setValidateMessage("Masz już urlop w tym okresie");
+    } else {
+      const request = {
+        ...loginRequest,
+        account: accounts[0],
+      };
+
+      instance
+        .acquireTokenSilent(request)
+        .then((response) =>
+          callMsGraphPost(
+            graphConfig.graphEventEndPoint,
+            response.accessToken,
+            data
+          ).then((response) => {
+            setValidateMessage(messages.success);
+            handleResetInputs();
+            setTimeout(() => {
+              setShow(false);
+              requestEvents();
+            }, 3000);
+          })
+        )
+        .catch((e) => {
+          setValidateMessage(messages.error);
+          console.log(e);
+        });
+    }
   };
 
   return (
