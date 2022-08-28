@@ -163,7 +163,7 @@ export const ProfileData = (props) => {
           </>
         )}
       </div>
-      <HolidayForm />
+      <HolidayForm profile={profile} />
       {holidays}
     </>
   );
