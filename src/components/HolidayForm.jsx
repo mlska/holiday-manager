@@ -18,6 +18,7 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
   const handleShow = () => {
     setShow(true);
     handleResetInputs();
+    setValidateMessage("");
   };
 
   const handleResetInputs = () => {
