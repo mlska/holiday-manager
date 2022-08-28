@@ -5,14 +5,25 @@ import Form from "react-bootstrap/Form";
 import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.css";
 
-const HolidayForm = () => {
+import { loginRequest, graphConfig } from "../authConfig";
+import { callMsGraphPost } from "../graph";
+
+import { useMsal } from "@azure/msal-react";
+
+const HolidayForm = ({ profile }) => {
+  const { instance, accounts } = useMsal();
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
   const [date, setDate] = useState([today, tomorrow]);
-  const [localization, setLocalization] = useState("");
 
-  const [show, setShow] = useState(false);
+  const [localization, setLocalization] = useState("");
+  const handleLocalization = (event) => setLocalization(event.target.value);
 
   const types = [
     "Wypoczynkowy",
@@ -55,19 +66,95 @@ const HolidayForm = () => {
     },
   ];
 
-  const [checkBoxValue, setCheckBoxValue] = useState();
+  const [checkedOne, setCheckedOne] = useState(true);
+  const [checkedTwo, setCheckedTwo] = useState(true);
+  const [checkedThree, setCheckedThree] = useState(true);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleOnChangeOne = () => {
+    setCheckedOne(!checkedOne);
+  };
+  const handleOnChangeTwo = () => {
+    setCheckedTwo((prevState) => !prevState);
+  };
+  const handleOnChangeThree = () => {
+    setCheckedThree((prevState) => !prevState);
+  };
 
-  const handleLocalization = (event) => setLocalization(event.target.value);
+  const AttendeesComponent = attendees.map((attendee, index) => (
+    <Form.Check
+      key={`radio-${index}`}
+      type="checkbox"
+      label={attendee.name}
+      checked={
+        (index === 0 && checkedOne) ||
+        (index === 1 && checkedTwo) ||
+        (index === 2 && checkedThree)
+      }
+      value={
+        (index === 0 && checkedOne) ||
+        (index === 1 && checkedTwo) ||
+        (index === 2 && checkedThree)
+      }
+      onChange={
+        (index === 0 && handleOnChangeOne) ||
+        (index === 1 && handleOnChangeTwo) ||
+        (index === 2 && handleOnChangeThree)
+      }
+    />
+  ));
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const data = {
+      initials: `${profile.givenName[0]}${profile.surname[0]}`,
+      type: radioValue,
+      start: date[0].toISOString().slice(0, 10),
+      end: date[1].toISOString().slice(0, 10),
+      location: localization,
+      attendees: [
+        {
+          name: profile.givenName + profile.surname,
+          mail: profile.mail,
+        },
+        {
+          name: checkedOne && attendees[0].name,
+          mail: checkedOne && attendees[0].mail,
+        },
+        {
+          name: checkedTwo && attendees[1].name,
+          mail: checkedTwo && attendees[1].mail,
+        },
+        {
+          name: checkedThree && attendees[2].name,
+          mail: checkedThree && attendees[2].mail,
+        },
+      ],
+    };
+
+    const request = {
+      ...loginRequest,
+      account: accounts[0],
+    };
+
+    instance
+      .acquireTokenSilent(request)
+      .then((response) =>
+        callMsGraphPost(
+          graphConfig.graphEventEndPoint,
+          response.accessToken,
+          data
+        ).then((response) => console.log(response))
+      )
+      .catch((e) => console.log(e));
+  };
 
   return (
     <>
       <Button
         variant="primary"
         onClick={handleShow}
-        className="d-block mx-auto mb-4"
+        className="d-block mx-auto mb-4 btn-lg"
       >
         Dodaj urlop
       </Button>
@@ -76,42 +163,48 @@ const HolidayForm = () => {
         <Modal.Header closeButton>
           <Modal.Title>Nowy urlop</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="d-flex row w-100 justify-items-center gap-2">
-            <label>
-              Data
-              <DateRangePicker
-                className="d-block"
-                value={date}
-                onChange={setDate}
-                format={"dd-MM-yyyy"}
-                isoWeek={true}
-                character={" ~ "}
-              />
-            </label>
-            <label>
-              Lokaliacja
-              <input
-                type="text"
-                onChange={handleLocalization}
-                value={localization}
-                className="d-block"
-              />
-            </label>
-            <div>
-              <div className="mb-1">Rodzaj</div>
-              {TypesComponent}
+        <form onSubmit={handleSubmit}>
+          <Modal.Body>
+            <div className="d-flex row w-100 justify-items-center gap-2">
+              <label>
+                Data
+                <DateRangePicker
+                  className="d-block"
+                  value={date}
+                  onChange={setDate}
+                  format={"dd-MM-yyyy"}
+                  isoWeek={true}
+                  character={" ~ "}
+                />
+              </label>
+              <label>
+                Lokaliacja
+                <input
+                  type="text"
+                  onChange={handleLocalization}
+                  value={localization}
+                  className="d-block"
+                />
+              </label>
+              <div>
+                <div className="mb-1">Rodzaj</div>
+                {TypesComponent}
+              </div>
+              <div>
+                <div className="mb-1">Wyślij do</div>
+                {AttendeesComponent}
+              </div>
             </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Zamknij
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Potwierdź
-          </Button>
-        </Modal.Footer>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Zamknij
+            </Button>
+            <Button variant="primary" type="submit">
+              Potwierdź
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   );
