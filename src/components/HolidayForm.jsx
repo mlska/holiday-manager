@@ -10,12 +10,24 @@ import { callMsGraphPost } from "../graph";
 
 import { useMsal } from "@azure/msal-react";
 
-const HolidayForm = ({ profile }) => {
+const HolidayForm = ({ profile, requestEvents }) => {
   const { instance, accounts } = useMsal();
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setShow(true);
+    handleResetInputs();
+  };
+
+  const handleResetInputs = () => {
+    setLocalization("");
+    setDate([today, tomorrow]);
+    setRadioValue(types[0]);
+    setCheckedOne(true);
+    setCheckedTwo(true);
+    setCheckedThree(true);
+  };
 
   const today = new Date();
   const tomorrow = new Date();
@@ -103,6 +115,20 @@ const HolidayForm = ({ profile }) => {
     />
   ));
 
+  const messages = {
+    success: "Utworzono nowy urlop",
+    error: "Błąd wysyłania urlopu",
+  };
+
+  const [validateMessage, setValidateMessage] = useState("");
+
+  const ValidateMessageComponent =
+    validateMessage.length === messages.success.length ? (
+      <p className="mt-4 mb-0 text-success">{validateMessage}</p>
+    ) : (
+      <p className="mt-4 mb-0 text-danger">{validateMessage}</p>
+    );
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -144,9 +170,19 @@ const HolidayForm = ({ profile }) => {
           graphConfig.graphEventEndPoint,
           response.accessToken,
           data
-        ).then((response) => console.log(response))
+        ).then((response) => {
+          setValidateMessage(messages.success);
+          handleResetInputs();
+          setTimeout(() => {
+            setShow(false);
+            requestEvents();
+          }, 3000);
+        })
       )
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        setValidateMessage(messages.error);
+        console.log(e);
+      });
   };
 
   return (
@@ -195,6 +231,7 @@ const HolidayForm = ({ profile }) => {
                 {AttendeesComponent}
               </div>
             </div>
+            {ValidateMessageComponent}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
