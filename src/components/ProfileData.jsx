@@ -94,7 +94,7 @@ export const ProfileData = (props) => {
             Do: <strong>{endDate}</strong>
           </div>
           <div>
-            Miejscowość: <strong>{event.location.displayName}</strong>
+            Lokalizacja: <strong>{event.location.displayName}</strong>
           </div>
           <div>
             Zatwierdzony przez: <strong>{confirmedBy}</strong>
@@ -163,7 +163,7 @@ export const ProfileData = (props) => {
           </>
         )}
       </div>
-      <HolidayForm profile={profile} />
+      <HolidayForm profile={profile} requestEvents={props.requestEvents} />
       {holidays}
     </>
   );
