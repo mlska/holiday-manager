@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/holiday-manager/static/css/main.3b92fcf7.css",
+    "main.js": "/holiday-manager/static/js/main.0203e212.js",
+    "index.html": "/holiday-manager/index.html",
+    "main.3b92fcf7.css.map": "/holiday-manager/static/css/main.3b92fcf7.css.map",
+    "main.0203e212.js.map": "/holiday-manager/static/js/main.0203e212.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3b92fcf7.css",
+    "static/js/main.0203e212.js"
+  ]
+}
