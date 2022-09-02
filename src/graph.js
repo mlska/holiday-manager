@@ -75,30 +75,33 @@ export function callMsGraphPost(endPoint, accessToken, data) {
         displayName: data.location,
       },
       showAs: "oof",
-      // attendees: [
-      //   {
-      //     emailAddress: {
-      //       address: data.attendees[0].mail,
-      //       name: data.attendees[0].name,
-      //     },
-      //     type: "required",
-      //   },
-      //   {
-      //     emailAddress: {
-      //       address: data.attendees[1].mail,
-      //       name: data.attendees[1].name,
-      //     },
-      //     type: "required",
-      //   },
-      //   {
-      //     emailAddress: {
-      //       address: data.attendees[2].mail,
-      //       name: data.attendees[2].name,
-      //     },
-      //     type: "required",
-      //   },
-      // ],
+      isAllDay: true,
+      attendees: data.attendees.map((attendee) => ({
+        emailAddress: {
+          address: attendee.mail,
+          name: attendee.name,
+        },
+        type: "required",
+      })),
     }),
+  };
+
+  const response = fetch(endPoint, options)
+    .then((response) => response.json())
+    .catch((error) => console.log(error));
+
+  return response;
+}
+
+export function callMsGraphDelete(endPoint, accessToken) {
+  const headers = new Headers();
+  const bearer = `Bearer ${accessToken}`;
+
+  headers.append("Authorization", bearer);
+
+  const options = {
+    method: "DELETE",
+    headers: headers,
   };
 
   const response = fetch(endPoint, options)
