@@ -2,7 +2,10 @@ export const msalConfig = {
   auth: {
     clientId: process.env.REACT_APP_CLIENT_ID,
     authority: process.env.REACT_APP_AUTHORITY,
-    redirectUri: "http://localhost:3000",
+    redirectUri:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://mlska.github.io/holiday-manager/",
   },
   cache: {
     cacheLocation: "sessionStorage",
