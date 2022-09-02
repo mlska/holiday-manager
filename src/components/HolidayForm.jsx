@@ -66,17 +66,21 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
 
   const attendees = [
     {
-      name: "Jakub Kamiński",
-      mail: "jakub.kaminski@blue-robotics.pl",
+      name: profile.givenName + profile.surname,
+      mail: profile.mail,
     },
-    {
-      name: "Piotr Bieda",
-      mail: "piotr.bieda@blue-robotics.pl",
-    },
-    {
-      name: "Katarzyna Trzcińska",
-      mail: "katarzyna.trzcinska@blue-robotics.pl",
-    },
+    // {
+    //   name: "Jakub Kamiński",
+    //   mail: "jakub.kaminski@blue-robotics.pl",
+    // },
+    // {
+    //   name: "Piotr Bieda",
+    //   mail: "piotr.bieda@blue-robotics.pl",
+    // },
+    // {
+    //   name: "Katarzyna Trzcińska",
+    //   mail: "katarzyna.trzcinska@blue-robotics.pl",
+    // },
   ];
 
   const [checkedOne, setCheckedOne] = useState(true);
@@ -93,28 +97,31 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
     setCheckedThree((prevState) => !prevState);
   };
 
-  const AttendeesComponent = attendees.map((attendee, index) => (
-    <Form.Check
-      key={`radio-${index}`}
-      type="checkbox"
-      label={attendee.name}
-      checked={
-        (index === 0 && checkedOne) ||
-        (index === 1 && checkedTwo) ||
-        (index === 2 && checkedThree)
-      }
-      value={
-        (index === 0 && checkedOne) ||
-        (index === 1 && checkedTwo) ||
-        (index === 2 && checkedThree)
-      }
-      onChange={
-        (index === 0 && handleOnChangeOne) ||
-        (index === 1 && handleOnChangeTwo) ||
-        (index === 2 && handleOnChangeThree)
-      }
-    />
-  ));
+  const AttendeesComponent = attendees.map(
+    (attendee, index) =>
+      index > 0 && (
+        <Form.Check
+          key={`radio-${index}`}
+          type="checkbox"
+          label={attendee.name}
+          checked={
+            (index === 1 && checkedOne) ||
+            (index === 2 && checkedTwo) ||
+            (index === 3 && checkedThree)
+          }
+          value={
+            (index === 1 && checkedOne) ||
+            (index === 2 && checkedTwo) ||
+            (index === 3 && checkedThree)
+          }
+          onChange={
+            (index === 1 && handleOnChangeOne) ||
+            (index === 2 && handleOnChangeTwo) ||
+            (index === 3 && handleOnChangeThree)
+          }
+        />
+      )
+  );
 
   const messages = {
     success: "Utworzono nowy urlop",
@@ -141,21 +148,21 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
       location: localization,
       attendees: [
         {
-          name: profile.givenName + profile.surname,
-          mail: profile.mail,
+          name: attendees[0].name,
+          mail: attendees[0].mail,
         },
-        {
-          name: checkedOne && attendees[0].name,
-          mail: checkedOne && attendees[0].mail,
-        },
-        {
-          name: checkedTwo && attendees[1].name,
-          mail: checkedTwo && attendees[1].mail,
-        },
-        {
-          name: checkedThree && attendees[2].name,
-          mail: checkedThree && attendees[2].mail,
-        },
+        //   {
+        //     name: checkedOne && attendees[1].name,
+        //     mail: checkedOne && attendees[1].mail,
+        //   },
+        //   {
+        //     name: checkedTwo && attendees[2].name,
+        //     mail: checkedTwo && attendees[2].mail,
+        //   },
+        //   {
+        //     name: checkedThree && attendees[3].name,
+        //     mail: checkedThree && attendees[3].mail,
+        //   },
       ],
     };
 

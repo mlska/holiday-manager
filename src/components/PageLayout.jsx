@@ -14,7 +14,7 @@ export const PageLayout = (props) => {
         variant="dark"
         className="d-flex justify-content-between"
       >
-        <a className="navbar-brand ms-4" href="/">
+        <a className="navbar-brand ms-4" href="/holiday-manager">
           Manager urlopów
         </a>
         {isAuthenticated ? <SignOutButton /> : <SignInButton />}

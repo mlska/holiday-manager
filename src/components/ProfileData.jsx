@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import generateHolidayApplication from "../generateHolidayApplication";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest, graphConfig } from "../authConfig";
-import { callMsGraphPatch } from "../graph";
+import { callMsGraphPatch, callMsGraphDelete } from "../graph";
 import HolidayForm from "./HolidayForm";
 
 export const ProfileData = (props) => {
@@ -37,6 +37,23 @@ export const ProfileData = (props) => {
         ).then((response) => props.requestEvents());
       })
       .catch((e) => console.log("patching error"));
+  }
+
+  function deleteEvent(eventID) {
+    const request = {
+      ...loginRequest,
+      account: accounts[0],
+    };
+
+    instance
+      .acquireTokenSilent(request)
+      .then((response) => {
+        callMsGraphDelete(
+          `${graphConfig.graphEventEndPoint}${eventID}`,
+          response.accessToken
+        ).then((response) => props.requestEvents());
+      })
+      .catch((e) => console.log("delete error"));
   }
 
   const holidays = events.map((event, index) => {
@@ -74,6 +91,12 @@ export const ProfileData = (props) => {
       patchEvent(event.id);
     };
 
+    const handleDeleteEvent = () => {
+      deleteEvent(event.id);
+      props.requestEvents();
+      console.log("deleted event");
+    };
+
     return (
       <Card
         style={{ marginBottom: "2rem" }}
@@ -81,7 +104,13 @@ export const ProfileData = (props) => {
         days={days}
         isprinted={Number(isPrinted)}
       >
-        <Card.Header as="h5">Urlop numer {index + 1}</Card.Header>
+        <Card.Header className="d-flex align-items-center justify-content-between">
+          <h5 className="mb-0">Urlop numer {index + 1}</h5>
+          <Button
+            className="btn btn-close bg-transparent"
+            onClick={handleDeleteEvent}
+          ></Button>
+        </Card.Header>
         <Card.Body>
           {/* <Card.Text> */}
           <div>
@@ -99,18 +128,20 @@ export const ProfileData = (props) => {
           <div>
             Zatwierdzony przez: <strong>{confirmedBy}</strong>
           </div>
-          {isPrinted ? (
-            <Button className="btn btn-secondary btn-lg px-4 my-3" disabled>
-              Wniosek wydrukowany
-            </Button>
-          ) : (
-            <Button
-              className="btn btn-primary btn-lg px-4 my-3"
-              onClick={handleHolidayApplication}
-            >
-              Drukuj wniosek
-            </Button>
-          )}
+          <div className="d-flex justify-content-between">
+            {isPrinted ? (
+              <Button className="btn btn-secondary btn-lg px-4 my-3" disabled>
+                Wniosek wydrukowany
+              </Button>
+            ) : (
+              <Button
+                className="btn btn-primary btn-lg px-4 my-3"
+                onClick={handleHolidayApplication}
+              >
+                Drukuj wniosek
+              </Button>
+            )}
+          </div>
         </Card.Body>
       </Card>
     );
