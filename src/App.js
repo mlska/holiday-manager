@@ -8,6 +8,7 @@ import {
 import { loginRequest, graphConfig } from "./authConfig";
 import { ProfileData } from "./components/ProfileData";
 import WelcomeContent from "./components/WelcomeContent";
+import Footer from "./components/Footer";
 import { callMsGraphGet } from "./graph";
 import "./App.css";
 
@@ -94,6 +95,7 @@ function App() {
       <UnauthenticatedTemplate>
         <WelcomeContent />
       </UnauthenticatedTemplate>
+      <Footer />
     </PageLayout>
   );
 }
