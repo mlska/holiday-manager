@@ -139,12 +139,17 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const startDate = date[0].toISOString().slice(0, 10);
+    let end = date[1];
+    end.setDate(date[1].getDate() + 1);
+
+    const endDate = end.toISOString().slice(0, 10);
 
     const data = {
       initials: `${profile.givenName[0]}${profile.surname[0]}`,
       type: radioValue,
-      start: date[0].toISOString().slice(0, 10),
-      end: date[1].toISOString().slice(0, 10),
+      start: startDate,
+      end: endDate,
       location: localization,
       attendees: [
         {
@@ -165,12 +170,12 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
         //   },
       ],
     };
-
     let isOverlapping = false;
 
     events.forEach((event) => {
       const start = event.start.dateTime.slice(0, 10);
       const end = event.end.dateTime.slice(0, 10);
+      console.log(event);
       if (end >= data.start && start <= data.end) {
         console.log("konflikt urlopu");
         isOverlapping = true;
