@@ -59,17 +59,40 @@ export const ProfileData = (props) => {
   const holidays = events.map((event, index) => {
     const startDate = event.start.dateTime.slice(0, 10);
     let endDate = new Date(event.end.dateTime);
+
     const startDateTime = new Date(startDate).getTime();
     const endDateTime = new Date(endDate).getTime();
     const timeDiff = endDateTime - startDateTime;
-    const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
     const isPrinted = event.bodyPreview === "ok";
     const printDate = new Date().toISOString().slice(0, 10);
     const year = new Date().getFullYear();
     let confirmedBy = "";
 
+    let days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
     endDate.setDate(endDate.getDate());
     endDate = endDate.toISOString().slice(0, 10);
+
+    const checkWeekendDaysAmount = (start, days) => {
+      let d1 = new Date(start);
+      let weekendDays = 0;
+
+      for (let index = 0; index < days; index++) {
+        let nextDate = d1;
+        if (index > 0) {
+          nextDate.setDate(d1.getDate() + 1);
+        }
+        const day = nextDate.getDay();
+        if (day === 6 || day === 0) {
+          weekendDays++;
+        }
+      }
+      return weekendDays;
+    };
+
+    const weekendDays = checkWeekendDaysAmount(startDate, days);
+    days = days - weekendDays;
 
     event.attendees.forEach((attendent) => {
       if (attendent.status.response === "accepted") {
