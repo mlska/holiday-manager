@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/holiday-manager/static/css/main.82d00182.css",
-    "main.js": "/holiday-manager/static/js/main.4a2a1821.js",
+    "main.js": "/holiday-manager/static/js/main.d7e509f4.js",
     "index.html": "/holiday-manager/index.html",
     "main.82d00182.css.map": "/holiday-manager/static/css/main.82d00182.css.map",
-    "main.4a2a1821.js.map": "/holiday-manager/static/js/main.4a2a1821.js.map"
+    "main.d7e509f4.js.map": "/holiday-manager/static/js/main.d7e509f4.js.map"
   },
   "entrypoints": [
     "static/css/main.82d00182.css",
-    "static/js/main.4a2a1821.js"
+    "static/js/main.d7e509f4.js"
   ]
 }
