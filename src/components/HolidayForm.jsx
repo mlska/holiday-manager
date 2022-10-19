@@ -63,25 +63,20 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
       checked={radioValue === type}
     />
   ));
+  const verifiedDomain =
+    profile.mail.substring(profile.mail.indexOf("@") + 1) ===
+    process.env.REACT_APP_DOMAIN;
 
   const attendees = [
     {
-      name: profile.givenName + profile.surname,
+      name: profile.givenName + " " + profile.surname,
       mail: profile.mail,
     },
-    // {
-    //   name: "Jakub Kamiński",
-    //   mail: "jakub.kaminski@blue-robotics.pl",
-    // },
-    // {
-    //   name: "Piotr Bieda",
-    //   mail: "piotr.bieda@blue-robotics.pl",
-    // },
-    // {
-    //   name: "Katarzyna Trzcińska",
-    //   mail: "katarzyna.trzcinska@blue-robotics.pl",
-    // },
   ];
+
+  if (verifiedDomain) {
+    attendees.push(...JSON.parse(process.env.REACT_APP_ATTENDEES));
+  }
 
   const [checkedOne, setCheckedOne] = useState(true);
   const [checkedTwo, setCheckedTwo] = useState(true);
@@ -156,18 +151,18 @@ const HolidayForm = ({ profile, requestEvents, events }) => {
           name: attendees[0].name,
           mail: attendees[0].mail,
         },
-        //   {
-        //     name: checkedOne && attendees[1].name,
-        //     mail: checkedOne && attendees[1].mail,
-        //   },
-        //   {
-        //     name: checkedTwo && attendees[2].name,
-        //     mail: checkedTwo && attendees[2].mail,
-        //   },
-        //   {
-        //     name: checkedThree && attendees[3].name,
-        //     mail: checkedThree && attendees[3].mail,
-        //   },
+        {
+          name: checkedOne && attendees[1].name,
+          mail: checkedOne && attendees[1].mail,
+        },
+        {
+          name: checkedTwo && attendees[2].name,
+          mail: checkedTwo && attendees[2].mail,
+        },
+        {
+          name: checkedThree && attendees[3].name,
+          mail: checkedThree && attendees[3].mail,
+        },
       ],
     };
     let isOverlapping = false;
